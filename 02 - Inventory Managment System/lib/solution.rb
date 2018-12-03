@@ -17,9 +17,10 @@ print "Box id file: "
 file_name = ARGV[0] ||= gets.chomp
 system = InventoryManagementSystem.new
 system.load_box_ids(file_name)
-boxes_checksum = system.boxes_checksum do |box_id, two_same_letters, three_same_letters|
+boxes_checksum = system.boxes_checksum do |box_id, letter_counts|
   if options[:verbose]
     puts "  - #{box_id.rjust(25)}"
   end
 end
 puts "The checksum for boxes is #{boxes_checksum}."
+puts system.common_letters_in_boxes

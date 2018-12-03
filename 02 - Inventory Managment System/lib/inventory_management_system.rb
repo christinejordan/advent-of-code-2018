@@ -22,6 +22,18 @@ class InventoryManagementSystem
     two_same_letters * three_same_letters
   end
 
+  def common_letters_in_boxes
+    common_letters = Hash.new(0)
+    @box_ids.each do |box_id|
+      (0..(box_id.length-1)).each do |index|
+        letters = box_id.dup
+        letters.slice!(index)
+        common_letters[[letters, index]] += 1
+      end
+    end
+    common_letters.find_all { |letters, count| count >= 2 }
+  end
+
   private 
 
   def letter_counts(box_id)
