@@ -18,16 +18,18 @@ class Polymer
     length
   end
 
-  def react
+  def react(without: nil)
     composition_before_reaction = composition
     composition_after_reaction = nil
+    pass_number = 1
 
     until composition_before_reaction == composition_after_reaction
       composition_before_reaction = composition
-      single_pass_react
+      single_pass_react(without: without)
       composition_after_reaction = composition
+      pass_number += 1
     end
-    composition
+    self
   end
 
   def to_s
@@ -42,22 +44,37 @@ class Polymer
 
   private
 
-  def single_pass_react
+  def single_pass_react(without: nil)
     unit = composition
-    last_unit = nil
+    previous_unit = nil
 
     while unit
-      if unit.react?(unit.next)
-        if last_unit
-          last_unit.next = unit.next.next
+      if unit.type == without
+        if previous_unit
+          previous_unit.next = unit.next
+          unit.next.previous = unit.previous if unit.next
+          unit = previous_unit
+          previous_unit = previous_unit.previous
+        else
+          @composition = unit.next
+          composition.previous = nil if composition
+          unit = composition
+        end
+      elsif unit.react?(unit.next)
+        if previous_unit
+          previous_unit.next = unit.next.next
+          unit.next.next.previous = unit.previous if unit.next.next
+          unit = previous_unit
+          previous_unit = previous_unit.previous
         else
           @composition = unit.next.next
+          composition.previous = nil if composition
+          unit = composition
         end
       else
-        last_unit = unit
+        previous_unit = unit
+        unit = previous_unit.next
       end
-
-      unit = last_unit.next
     end
   end
 end

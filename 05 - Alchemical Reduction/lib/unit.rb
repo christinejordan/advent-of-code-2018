@@ -1,11 +1,15 @@
 class Unit
   
-  attr_accessor :value, :last, :next
+  attr_accessor :value, :previous, :next
 
-  def initialize(value, last = nil)
+  def initialize(value, previous = nil)
     @value = value
-    @last = last
+    @previous = previous
     @next = nil
+  end
+
+  def to_s
+    value
   end
 
   def type
@@ -18,7 +22,6 @@ class Unit
 
   def react?(unit)
     return false unless unit
-    type == unit.type
-    positive? != unit.positive?
+    type == unit.type && positive? != unit.positive?
   end
 end
