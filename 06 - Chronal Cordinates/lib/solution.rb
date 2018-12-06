@@ -26,6 +26,7 @@ puts "The coordinates are in the range (#{min_coordinate[0]}, #{min_coordinate[1
 
 coordinate_areas = Hash.new(0)
 infinite_area_indexes = []
+desired_region = []
 (min_coordinate[1]..max_coordinate[1]).each do |y|
   (min_coordinate[0]..max_coordinate[0]).each do |x|
     manhattan_distances = {}
@@ -47,6 +48,15 @@ infinite_area_indexes = []
     else
       # print "."
     end
+
+    total_manhattan_distance = 0
+    manhattan_distances.each do |distance, indexes|
+      total_manhattan_distance += distance * indexes.length
+    end
+
+    if total_manhattan_distance < 10000
+      desired_region << [x, y]
+    end
   end
   # puts
 end
@@ -60,3 +70,4 @@ end
 max_finite_area = finite_areas.values.max
 
 puts "The maximum finite area is #{max_finite_area}."
+puts "The area of the desired region is #{desired_region.length}."
